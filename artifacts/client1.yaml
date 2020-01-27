@@ -1,0 +1,12 @@
+---
+
+name: "cievus-client1"
+description: "cievus safedoc Network "
+version: "1.0"
+
+client:
+  organization: Client1
+  credentialStore:
+    path: "./key/fabric-client-kv-client1"
+    cryptoStore:
+      path: "./key/cryptoStore/client1"

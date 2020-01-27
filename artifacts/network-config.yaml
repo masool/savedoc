@@ -1,0 +1,165 @@
+---
+# --------------------------------------------------------------------------------------------
+# The network connection profile provides client applications the information about the target
+# blockchain network that are necessary for the applications to interact with it. 
+# --------------------------------------------------------------------------------------------
+
+name: "cievus"
+description: "cievus safedoc Network"
+version: "1.0"
+
+channels:
+  cievus-safedoc-channel:
+    orderers:
+      - orderer1-safedoc.cievus.com
+      - orderer2-safedoc.cievus.com
+      - orderer3-safedoc.cievus.com
+
+    peers:
+      peer0.client1.cievus.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      peer0.client2.cievus.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      peer0.client3.cievus.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+    chaincodes:
+      - safedoc:v0
+
+organizations:
+  Client1:
+    mspid: Client1MSP
+    peers:
+      - peer0.client1.cievus.com
+
+    certificateAuthorities:
+      - ca-client1
+
+    adminPrivateKey:
+      path: artifacts/channel/crypto-config/peerOrganizations/client1.cievus.com/users/Admin@client1.cievus.com/msp/keystore/8ac1d25ed2f40b248dbc73c248de082235b874c1c6630fc23712afd1c22aa70d_sk
+    signedCert:
+      path: artifacts/channel/crypto-config/peerOrganizations/client1.cievus.com/users/Admin@client1.cievus.com/msp/signcerts/Admin@client1.cievus.com-cert.pem
+
+  Client2:
+    mspid: Client2MSP
+    peers:
+      - peer0.client2.cievus.com
+
+    certificateAuthorities:
+      - ca-client2
+    adminPrivateKey:
+      path: artifacts/channel/crypto-config/peerOrganizations/client2.cievus.com/users/Admin@client2.cievus.com/msp/keystore/f4b6a116fff5bc29472737dd25bcf5a99403a7ac914936cab473b1ad366eda8f_sk
+    signedCert:
+      path: artifacts/channel/crypto-config/peerOrganizations/client2.cievus.com/users/Admin@client2.cievus.com/msp/signcerts/Admin@client2.cievus.com-cert.pem
+
+  Client3:
+    mspid: Client3MSP
+    peers:
+      - peer0.client3.cievus.com
+
+    certificateAuthorities:
+      - ca-client3
+    adminPrivateKey:
+      path: artifacts/channel/crypto-config/peerOrganizations/client3.cievus.com/users/Admin@client3.cievus.com/msp/keystore/b6d6ec3b1e633eca05985cd82395d2710bc6e30e274a76ae2611f2ce3dad0c68_sk
+    signedCert:
+      path: artifacts/channel/crypto-config/peerOrganizations/client3.cievus.com/users/Admin@client3.cievus.com/msp/signcerts/Admin@client3.cievus.com-cert.pem
+
+orderers:
+  orderer1-safedoc.cievus.com:
+    url: grpcs://localhost:15301
+    grpcOptions:
+      ssl-target-name-override: orderer1-safedoc.cievus.com
+      grpc-max-send-message-length: -1
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/ordererOrganizations/cievus.com/orderers/orderer1-safedoc.cievus.com/tls/ca.crt
+
+  orderer2-safedoc.cievus.com:
+    url: grpcs://localhost:15302
+    grpcOptions:
+      ssl-target-name-override: orderer2-safedoc.cievus.com
+      grpc-max-send-message-length: -1
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/ordererOrganizations/cievus.com/orderers/orderer2-safedoc.cievus.com/tls/ca.crt
+
+  orderer3-safedoc.cievus.com:
+    url: grpcs://localhost:15303
+    grpcOptions:
+      ssl-target-name-override: orderer3-safedoc.cievus.com
+      grpc-max-send-message-length: -1
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/ordererOrganizations/cievus.com/orderers/orderer3-safedoc.cievus.com/tls/ca.crt
+
+peers:
+  peer0.client1.cievus.com:
+    # this URL is used to send endorsement and query requests
+    url: grpcs://localhost:15321
+    # this URL is used to connect the EventHub and registering event listeners
+    eventUrl: grpcs://localhost:15323
+    grpcOptions:
+      ssl-target-name-override: peer0.client1.cievus.com
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/client1.cievus.com/peers/peer0.client1.cievus.com/tls/ca.crt
+
+  peer0.client2.cievus.com:
+    url: grpcs://localhost:15333
+    eventUrl: grpcs://localhost:15335
+    grpcOptions:
+      ssl-target-name-override: peer0.client2.cievus.com
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/client2.cievus.com/peers/peer0.client2.cievus.com/tls/ca.crt
+
+  peer0.client3.cievus.com:
+    url: grpcs://localhost:15345
+    eventUrl: grpcs://localhost:15347
+    grpcOptions:
+      ssl-target-name-override: peer0.client3.cievus.com
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/client3.cievus.com/peers/peer0.client3.cievus.com/tls/ca.crt
+
+certificateAuthorities:
+  ca-client1:
+    url: https://localhost:15311
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/client1.cievus.com/ca/ca.client1.cievus.com-cert.pem
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    # [Optional] The optional name of the CA.
+    caName: ca-client1
+
+  ca-client2:
+    url: https://localhost:15312
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/client2.cievus.com/ca/ca.client2.cievus.com-cert.pem
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    # [Optional] The optional name of the CA.
+    caName: ca-client2
+
+  ca-client3:
+    url: https://localhost:15313
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/client3.cievus.com/ca/ca.client3.cievus.com-cert.pem
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    # [Optional] The optional name of the CA.
+    caName: ca-client3

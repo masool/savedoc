@@ -1,0 +1,13 @@
+{
+    "host": "localhost",
+    "port": "4002",
+    "jwt_expiretime": "36000",
+    "channelName": "cievus-safedoc-channel",
+    "CC_SRC_PATH": "../artifacts",
+    "eventWaitTime": "30000",
+    "admins": [{
+            "username": "admin",
+            "secret": "adminpw"
+        }
+    ]
+}

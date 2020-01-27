@@ -1,0 +1,45 @@
+# ---------------------------------------------------------------------------
+# "OrdererOrgs" - Definition of organizations managing orderer nodes
+# ---------------------------------------------------------------------------
+OrdererOrgs:
+  - Name: Orderer
+    Domain: cievus.com
+    Specs:
+      - Hostname: orderer1-safedoc
+      - Hostname: orderer2-safedoc
+      - Hostname: orderer3-safedoc
+
+# ---------------------------------------------------------------------------
+# "PeerOrgs" - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  - Name: Client1
+    Domain: client1.cievus.com
+    CA:
+       Hostname: ca 
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+    Users:
+      Count: 1
+  - Name: Client2
+    Domain: client2.cievus.com
+    CA:
+       Hostname: ca 
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+    Users:
+      Count: 1
+  - Name: Client3
+    Domain: client3.cievus.com
+    CA:
+       Hostname: ca 
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+    Users:
+      Count: 1

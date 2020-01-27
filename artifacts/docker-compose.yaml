@@ -1,0 +1,391 @@
+# ---------------------------------------------------------------------------------------------
+# This docker compose file bring up the Docker containers for run Hyperledger Fabric Network
+# ---------------------------------------------------------------------------------------------
+version: '2'
+
+networks:
+  network:
+
+services:
+
+  mysql.ca.client1:
+    container_name: mysql.ca.client1
+    extends:
+      file: base.yaml
+      service: mysql-base
+    volumes:
+      - ./Backup/Client1/CA:/var/lib/mysql
+    networks:
+      - network
+
+  mysql.ca.client2:
+    container_name: mysql.ca.client2
+    extends:
+      file: base.yaml
+      service: mysql-base
+    volumes:
+      - ./Backup/Client2/CA:/var/lib/mysql
+    networks:
+      - network
+
+  mysql.ca.client3:
+    container_name: mysql.ca.client3
+    extends:
+      file: base.yaml
+      service: mysql-base
+    volumes:
+      - ./Backup/Client3/CA:/var/lib/mysql
+    networks:
+      - network
+
+  ca.client1.cievus.com:
+    container_name: ca.client1.cievus.com
+    image: hyperledger/fabric-ca:1.1.0
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-client1
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.client1.cievus.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/54c377510a87e22c36701630672bc1298dcf48d739dd3e0e84c13b701c506493_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.client1.cievus.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/54c377510a87e22c36701630672bc1298dcf48d739dd3e0e84c13b701c506493_sk
+      - FABRIC_CA_SERVER_DB_TYPE=mysql
+      - FABRIC_CA_SERVER_DB_DATASOURCE=root:${MYSQL_PASSWORD}@tcp(mysql.ca.client1:3306)/fabric_ca?parseTime=true
+    ports:
+      - "15311:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.client1.cievus.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/54c377510a87e22c36701630672bc1298dcf48d739dd3e0e84c13b701c506493_sk'
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/client1.cievus.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    networks:
+      - network
+    depends_on:
+      - mysql.ca.client1
+
+  ca.client2.cievus.com:
+    container_name: ca.client2.cievus.com
+    image: hyperledger/fabric-ca:1.1.0
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-client2
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.client2.cievus.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/2502d6c16aaba4d320c131c0b78765a19eeb74e853349940e072787ef26e424d_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.client2.cievus.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/2502d6c16aaba4d320c131c0b78765a19eeb74e853349940e072787ef26e424d_sk
+      - FABRIC_CA_SERVER_DB_TYPE=mysql
+      - FABRIC_CA_SERVER_DB_DATASOURCE=root:${MYSQL_PASSWORD}@tcp(mysql.ca.client2:3306)/fabric_ca?parseTime=true
+    ports:
+      - "15312:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.client2.cievus.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/2502d6c16aaba4d320c131c0b78765a19eeb74e853349940e072787ef26e424d_sk'
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/client2.cievus.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    networks:
+      - network
+    depends_on:
+      - mysql.ca.client2
+
+  ca.client3.cievus.com:
+    container_name: ca.client3.cievus.com
+    image: hyperledger/fabric-ca:1.1.0
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-client3
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.client3.cievus.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/eb619b17b87fe6eac5773d53c6145d7b8d60fbd12ab21c22499db5826f5d0b60_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.client3.cievus.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/eb619b17b87fe6eac5773d53c6145d7b8d60fbd12ab21c22499db5826f5d0b60_sk
+      - FABRIC_CA_SERVER_DB_TYPE=mysql
+      - FABRIC_CA_SERVER_DB_DATASOURCE=root:${MYSQL_PASSWORD}@tcp(mysql.ca.client3:3306)/fabric_ca?parseTime=true
+    ports:
+      - "15313:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.client3.cievus.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/eb619b17b87fe6eac5773d53c6145d7b8d60fbd12ab21c22499db5826f5d0b60_sk'
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/client3.cievus.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    networks:
+      - network
+    depends_on:
+      - mysql.ca.client3
+
+  zookeeper0:
+    container_name: zookeeper0.cievus-safedoc.com
+    extends:
+      file: base.yaml
+      service: zookeeper-base
+    environment:
+      - ZOO_MY_ID=1
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+    volumes:
+      - ./Backup/Zookeeper/zk0/data:/data
+      - ./Backup/Zookeeper/zk0/datalog:/datalog
+    networks:
+      - network
+
+  zookeeper1:
+    container_name: zookeeper1.cievus-safedoc.com
+    extends:
+      file: base.yaml
+      service: zookeeper-base
+    environment:
+      - ZOO_MY_ID=2
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+    volumes:
+      - ./Backup/Zookeeper/zk1/data:/data
+      - ./Backup/Zookeeper/zk1/datalog:/datalog
+    networks:
+      - network
+
+  zookeeper2:
+    container_name: zookeeper2.cievus-safedoc.com
+    extends:
+      file: base.yaml
+      service: zookeeper-base
+    environment:
+      - ZOO_MY_ID=3
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+    volumes:
+      - ./Backup/Zookeeper/zk2/data:/data
+      - ./Backup/Zookeeper/zk2/datalog:/datalog
+    networks:
+      - network
+
+  kafka0:
+    container_name: kafka0.cievus-safedoc.com
+    extends:
+      file: base.yaml
+      service: kafka-base
+    environment:
+      - KAFKA_BROKER_ID=0
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    volumes:
+      - ./Backup/Kafka/kafka0:/tmp/kafka-logs
+    networks:
+      - network
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  kafka1:
+    container_name: kafka1.cievus-safedoc.com
+    extends:
+      file: base.yaml
+      service: kafka-base
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    volumes:
+      - ./Backup/Kafka/kafka1:/tmp/kafka-logs
+    networks:
+      - network
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  kafka2:
+    container_name: kafka2.cievus-safedoc.com
+    extends:
+      file: base.yaml
+      service: kafka-base
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    volumes:
+      - ./Backup/Kafka/kafka2:/tmp/kafka-logs
+    networks:
+      - network
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  kafka3:
+    container_name: kafka3.cievus-safedoc.com
+    extends:
+      file: base.yaml
+      service: kafka-base
+    environment:
+      - KAFKA_BROKER_ID=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    volumes:
+      - ./Backup/Kafka/kafka3:/tmp/kafka-logs
+    networks:
+      - network
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  orderer1-safedoc.cievus.com:
+    container_name: orderer1-safedoc.cievus.com
+    extends:
+      file: base.yaml
+      service: orderer-base
+    ports:
+      - 15301:7050
+    volumes:
+      - ./channel/crypto-config/ordererOrganizations/cievus.com/orderers/orderer1-safedoc.cievus.com/:/etc/hyperledger/msp/orderer
+    networks:
+      - network
+    depends_on:
+      - kafka0
+      - kafka1
+      - kafka2
+      - kafka3
+
+  orderer2-safedoc.cievus.com:
+    container_name: orderer2-safedoc.cievus.com
+    extends:
+      file: base.yaml
+      service: orderer-base
+    ports:
+      - 15302:7050
+    volumes:
+      - ./channel/crypto-config/ordererOrganizations/cievus.com/orderers/orderer2-safedoc.cievus.com/:/etc/hyperledger/msp/orderer
+    networks:
+      - network
+    depends_on:
+      - kafka0
+      - kafka1
+      - kafka2
+      - kafka3
+
+  orderer3-safedoc.cievus.com:
+    container_name: orderer3-safedoc.cievus.com
+    extends:
+      file: base.yaml
+      service: orderer-base
+    ports:
+      - 15303:7050
+    volumes:
+      - ./channel/crypto-config/ordererOrganizations/cievus.com/orderers/orderer3-safedoc.cievus.com/:/etc/hyperledger/msp/orderer
+    networks:
+      - network
+    depends_on:
+      - kafka0
+      - kafka1
+      - kafka2
+      - kafka3
+
+  couchdb.peer0.client1.cievus.com:
+    container_name: couchdb.peer0.client1.cievus.com
+    extends:
+      file: base.yaml
+      service: couch-base
+    volumes:
+      - ./Backup/Client1/CouchDb/peer0:/opt/couchdb/data
+    networks:
+      - network
+
+  peer0.client1.cievus.com:
+    container_name: peer0.client1.cievus.com
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.client1.cievus.com
+      - CORE_PEER_LOCALMSPID=Client1MSP
+      - CORE_PEER_ADDRESS=peer0.client1.cievus.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.client1.cievus.com:7051
+      - CORE_PEER_LISTENADDRESS=peer0.client1.cievus.com:7051
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.client1.cievus.com:7051
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.client1.cievus.com:5984
+    ports:
+      - 15321:7051
+      - 15323:7053
+    volumes:
+      - /var/run/:/host/var/run/
+      - ./channel/crypto-config/peerOrganizations/client1.cievus.com/peers/peer0.client1.cievus.com/:/etc/hyperledger/msp/peer
+      - ./Backup/Client1/Peer/peer0:/var/hyperledger/production
+    depends_on:
+      - orderer1-safedoc.cievus.com
+      - orderer2-safedoc.cievus.com
+      - orderer3-safedoc.cievus.com
+      - couchdb.peer0.client1.cievus.com
+    networks:
+      - network
+
+  couchdb.peer0.client2.cievus.com:
+    container_name: couchdb.peer0.client2.cievus.com
+    extends:
+      file: base.yaml
+      service: couch-base
+    volumes:
+      - ./Backup/Client2/CouchDb/peer0:/opt/couchdb/data
+    networks:
+      - network
+
+  peer0.client2.cievus.com:
+    container_name: peer0.client2.cievus.com
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.client2.cievus.com
+      - CORE_PEER_LOCALMSPID=Client2MSP
+      - CORE_PEER_ADDRESS=peer0.client2.cievus.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.client2.cievus.com:7051
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.client2.cievus.com:5984
+      - CORE_PEER_LISTENADDRESS=peer0.client2.cievus.com:7051
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.client2.cievus.com:7051
+    ports:
+      - 15333:7051
+      - 15335:7053
+    volumes:
+      - /var/run/:/host/var/run/
+      - ./channel/crypto-config/peerOrganizations/client2.cievus.com/peers/peer0.client2.cievus.com/:/etc/hyperledger/msp/peer
+      - ./Backup/Client2/Peer/peer0:/var/hyperledger/production
+    depends_on:
+      - orderer1-safedoc.cievus.com
+      - orderer2-safedoc.cievus.com
+      - orderer3-safedoc.cievus.com
+      - couchdb.peer0.client2.cievus.com
+    networks:
+      - network
+
+  couchdb.peer0.client3.cievus.com:
+    container_name: couchdb.peer0.client3.cievus.com
+    extends:
+      file: base.yaml
+      service: couch-base
+    volumes:
+      - ./Backup/Client3/CouchDb/peer0:/opt/couchdb/data
+    networks:
+      - network
+
+  peer0.client3.cievus.com:
+    container_name: peer0.client3.cievus.com
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.client3.cievus.com
+      - CORE_PEER_LOCALMSPID=Client3MSP
+      - CORE_PEER_ADDRESS=peer0.client3.cievus.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.client3.cievus.com:7051
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.client3.cievus.com:5984
+      - CORE_PEER_LISTENADDRESS=peer0.client3.cievus.com:7051
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.client3.cievus.com:7051
+    ports:
+      - 15345:7051
+      - 15347:7053
+    volumes:
+      - /var/run/:/host/var/run/
+      - ./channel/crypto-config/peerOrganizations/client3.cievus.com/peers/peer0.client3.cievus.com/:/etc/hyperledger/msp/peer
+      - ./Backup/Client3/Peer/peer0:/var/hyperledger/production
+    depends_on:
+      - orderer1-safedoc.cievus.com
+      - orderer2-safedoc.cievus.com
+      - orderer3-safedoc.cievus.com
+      - couchdb.peer0.client3.cievus.com
+    networks:
+      - network
